@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-// import { h } from 'vue'
 
 // 虚拟模块导入（这些会在构建时被替换）
 let routes: any[] = []

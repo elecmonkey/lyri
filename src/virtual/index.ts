@@ -239,13 +239,8 @@ export { default as Footer } from '/src/theme/components/Footer.vue'
         const isDefaultTheme = themeName === 'default' || themeName === '@lyri/theme-default'
         
         return `
-import { defineComponent, h } from 'vue'
-${isDefaultTheme ? 
-  `import LyricLayout from '/src/theme/components/Layout.vue'` : 
-  `import { ThemeFactory } from '/src/theme/index.js'
-const theme = ThemeFactory.create(${JSON.stringify(this.config)})
-const LyricLayout = theme.Layout`
-}
+import { defineComponent, h/*, inject */} from 'vue'
+import LyricLayout from '/src/theme/components/Layout.vue'
 
 export default defineComponent({
   name: 'IndexPage',
