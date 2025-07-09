@@ -5,6 +5,7 @@ import { createParser } from '../parser'
 import { PluginManager } from '../plugin'
 import { build } from '../build'
 import { startDevServer } from '../dev-server'
+import { startPreviewServer } from '../preview'
 import { collectLyricFiles } from '../utils'
 
 const program = new Command()
@@ -105,11 +106,18 @@ program
   .option('-p, --port <port>', 'Port to run the server on', '4173')
   .option('-h, --host <host>', 'Host to run the server on', 'localhost')
   .option('--open', 'Open browser automatically')
+  .option('-o, --outDir <dir>', 'Output directory to serve')
   .argument('[root]', 'Root directory', '.')
-  .action(async (_root, _options) => {
+  .action(async (root, options) => {
     try {
-      // TODO: 实现预览服务器
-      console.log('Preview server not implemented yet')
+      const config = await resolveConfig(root, 'build')
+      
+      await startPreviewServer(config, {
+        port: parseInt(options.port),
+        host: options.host,
+        open: options.open,
+        outDir: options.outDir
+      })
       
     } catch (error) {
       console.error('Failed to start preview server:', error instanceof Error ? error.message : 'Unknown error')

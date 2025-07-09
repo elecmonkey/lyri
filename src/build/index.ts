@@ -117,10 +117,17 @@ export class LyriBuilder {
     
     // 客户端构建
     const clientConfig = mergeConfig(baseViteConfig, {
+      base: '/assets/',  // 设置正确的基础路径
       build: {
         outDir: resolve(buildConfig.outDir, 'assets'),
+        assetsDir: '',  // 不要嵌套 assets 目录
         rollupOptions: {
           input: this.getClientEntries()
+        }
+      },
+      resolve: {
+        alias: {
+          'vue': 'vue/dist/vue.esm-bundler.js'  // 客户端使用包含模板编译器的版本
         }
       }
     })
@@ -159,7 +166,12 @@ export class LyriBuilder {
         // 其他插件...
       ],
       base: buildConfig.base,
-      clearScreen: false
+      clearScreen: false,
+      define: {
+        __VUE_OPTIONS_API__: true,
+        __VUE_PROD_DEVTOOLS__: false,
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
+      }
     }, this.config.vite || {})
   }
   
@@ -201,24 +213,38 @@ export class LyriBuilder {
     console.log('Generating static pages...')
     
     // 生成首页
-    this.generateIndexPage(buildConfig)
+    await this.generateIndexPage(buildConfig)
     
     // 生成歌词页面
     for (const lyric of this.lyrics) {
-      this.generateLyricPage(lyric, buildConfig)
+      await this.generateLyricPage(lyric, buildConfig)
     }
   }
   
   /**
    * 生成首页
    */
-  private generateIndexPage(buildConfig: any) {
+  private async generateIndexPage(buildConfig: any) {
+    const { readdirSync } = await import('fs')
+    
+    // 从构建目录中获取实际的文件名
+    const assetsDir = resolve(buildConfig.outDir, 'assets')
+    const files = readdirSync(assetsDir)
+    
+    // 查找主要的 JS 和 CSS 文件
+    const mainJs = files.find(f => f.startsWith('main-') && f.endsWith('.js'))
+    const mainCss = files.find(f => f.startsWith('main-') && f.endsWith('.css')) || 
+                   files.find(f => f.includes('Layout-') && f.endsWith('.css'))
+    
+    const scripts = mainJs ? [`assets/${mainJs}`] : []
+    const styles = mainCss ? [`assets/${mainCss}`] : []
+    
     const html = this.generateHTML({
       title: this.config.title,
       description: this.config.description,
       content: '<div id="app"></div>',
-      scripts: ['assets/main.js'],
-      styles: ['assets/main.css']
+      scripts,
+      styles
     })
     
     writeFileSync(resolve(buildConfig.outDir, 'index.html'), html)
@@ -227,14 +253,27 @@ export class LyriBuilder {
   /**
    * 生成歌词页面
    */
-  private generateLyricPage(lyric: LyricData, buildConfig: any) {
+  private async generateLyricPage(lyric: LyricData, buildConfig: any) {
+    const { readdirSync } = await import('fs')
+    
     const slug = this.getSlug(lyric.meta.title)
+    const assetsDir = resolve(buildConfig.outDir, 'assets')
+    const files = readdirSync(assetsDir)
+    
+    // 查找对应的 JS 和 CSS 文件
+    const pageJs = files.find(f => f.includes(slug) && f.endsWith('.js'))
+    const pageCss = files.find(f => f.includes(slug) && f.endsWith('.css')) ||
+                   files.find(f => f.includes('Layout-') && f.endsWith('.css'))
+    
+    const scripts = pageJs ? [`assets/${pageJs}`] : []
+    const styles = pageCss ? [`assets/${pageCss}`] : []
+    
     const html = this.generateHTML({
       title: `${lyric.meta.title} - ${this.config.title}`,
       description: `${lyric.meta.artist ? `${lyric.meta.artist} - ` : ''}${lyric.meta.title}`,
       content: '<div id="app"></div>',
-      scripts: [`assets/${slug}.js`],
-      styles: ['assets/main.css']
+      scripts,
+      styles
     })
     
     const dir = resolve(buildConfig.outDir, slug)

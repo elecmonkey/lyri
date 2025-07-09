@@ -43,6 +43,7 @@ export default defineConfig({
     cli: 'src/cli/index.ts',
     build: 'src/build/index.ts',
     'dev-server': 'src/dev-server/index.ts',
+    preview: 'src/preview/index.ts',
     config: 'src/config/index.ts',
     parser: 'src/parser/index.ts',
     plugin: 'src/plugin/index.ts',

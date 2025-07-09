@@ -190,19 +190,28 @@ export { default as Footer } from '/src/theme/components/Footer.vue'
     return {
       id: '/@lyri/routes',
       content: () => {
+        // 生成导入语句
+        const imports = [
+          `import IndexPage from '/@lyri/pages/index.js'`,
+          ...this.lyrics.map(lyric => 
+            `import ${this.getSlug(lyric.meta.title).replace(/[-]/g, '_')}Page from '/@lyri/pages/${this.getSlug(lyric.meta.title)}'`
+          )
+        ].join('\n')
+        
+        // 生成路由配置
         const routes = this.lyrics.map(lyric => ({
           path: this.getPath(lyric.meta.title),
-          component: `() => import('/@lyri/pages/${this.getSlug(lyric.meta.title)}')`
+          component: `${this.getSlug(lyric.meta.title).replace(/[-]/g, '_')}Page`
         }))
         
         const routesCode = [
-          `  { path: '/', component: () => import('/@lyri/pages/index.js') }`,
+          `  { path: '/', component: IndexPage }`,
           ...routes.map(route => 
             `  { path: '${route.path}', component: ${route.component} }`
           )
         ].join(',\n')
         
-        return `export default [\n${routesCode}\n]`
+        return `${imports}\n\nexport default [\n${routesCode}\n]`
       }
     }
   }
@@ -408,6 +417,10 @@ export function createVirtualModulePlugin(
     },
     async load(id: string) {
       return await system.load(id)
+    },
+    generateBundle() {
+      // 在构建时，确保虚拟模块正确映射
+      // 这个钩子会在构建时被调用
     }
   }
 }
