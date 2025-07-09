@@ -113,7 +113,7 @@ export async function resolveConfig(
     defaultLanguage: 'zh-jyut',
     
     build: {
-      outDir: `${root}/dist`,
+      outDir: `${root}/.lyri/dist`,
       assetsDir: 'assets',
       generateSitemap: true,
       base: '/'
@@ -123,10 +123,35 @@ export async function resolveConfig(
     plugins: []
   }
   
-  // TODO: 实际的配置文件加载逻辑
-  // 1. 查找配置文件 (lyri.config.ts, lyri.config.js)
-  // 2. 使用 Vite 的 loadConfigFromFile 加载
-  // 3. 合并用户配置和默认配置
+  // 尝试加载用户配置文件
+  try {
+    const { resolve } = await import('path')
+    const { existsSync } = await import('fs')
+    
+    const configPath = resolve(root, 'lyri.config.ts')
+    
+    if (existsSync(configPath)) {
+      // 动态导入配置文件
+      const configModule = await import(`file://${configPath}`)
+      const userConfig = configModule.default
+      
+      // 合并配置
+      return {
+        ...defaultConfig,
+        ...userConfig,
+        build: {
+          ...defaultConfig.build,
+          ...userConfig.build
+        },
+        theme: {
+          ...defaultConfig.theme,
+          ...userConfig.theme
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load config file, using defaults:', error)
+  }
   
   return defaultConfig
 }

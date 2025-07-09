@@ -4,13 +4,10 @@ import type { PluginManager } from '../plugin'
 import { createVirtualModulePlugin } from '../virtual'
 import { build as viteBuild, mergeConfig } from 'vite'
 import { createRequire } from 'module'
-import { resolve, dirname } from 'path'
+import { resolve } from 'path'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
-import { fileURLToPath } from 'url'
 
 const require = createRequire(import.meta.url)
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 /**
  * 构建选项

@@ -48,7 +48,7 @@ program
 program
   .command('build')
   .description('Build the site for production')
-  .option('-o, --outDir <dir>', 'Output directory', 'dist')
+  .option('-o, --outDir <dir>', 'Output directory')
   .option('--base <base>', 'Base URL for deployment')
   .option('--clean', 'Clean output directory before build', true)
   .option('--no-sitemap', 'Skip sitemap generation')
@@ -71,13 +71,21 @@ program
         lyrics.push(lyric)
       }
       
-      // 执行构建
-      const result = await build(config, lyrics, pluginManager, {
-        outDir: options.outDir,
-        base: options.base,
+      // 执行构建 - 只有显式提供时才覆盖配置
+      const buildOptions: any = {
         cleanOutDir: options.clean,
         sitemap: options.sitemap
-      })
+      }
+      
+      if (options.outDir) {
+        buildOptions.outDir = options.outDir
+      }
+      
+      if (options.base) {
+        buildOptions.base = options.base
+      }
+      
+      const result = await build(config, lyrics, pluginManager, buildOptions)
       
       console.log(`\\n✅ Build completed in ${result.buildTime}ms`)
       console.log(`📁 Output: ${result.outDir}`)

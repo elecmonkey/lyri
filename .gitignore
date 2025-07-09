@@ -68,6 +68,9 @@ web_modules/
 dist
 dist-ssr
 
+# Lyri build output
+.lyri/
+
 # SvelteKit build output
 .svelte-kit
 

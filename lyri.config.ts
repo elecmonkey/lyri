@@ -30,7 +30,7 @@ export default {
   defaultLanguage: 'zh-CN',
   
   build: {
-    outDir: 'dist',
+    outDir: '.lyri/dist',
     base: '/',
     generateSitemap: true
   }
