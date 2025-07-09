@@ -1,0 +1,108 @@
+{
+  "name": "lyri",
+  "version": "0.1.0",
+  "description": "A static site generator for annotated lyrics",
+  "type": "module",
+  "keywords": [
+    "lyrics",
+    "annotation",
+    "static-site-generator",
+    "vue",
+    "vite",
+    "cantonese",
+    "mandarin",
+    "jyutping",
+    "pinyin"
+  ],
+  "homepage": "https://github.com/your-username/lyri",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/lyri"
+  },
+  "license": "MIT",
+  "author": "Your Name <your.email@example.com>",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts", 
+      "import": "./dist/theme/index.js"
+    }
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "lyri": "bin/lyri.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "client.d.ts",
+    "theme.d.ts"
+  ],
+  "scripts": {
+    "dev": "pnpm build --watch",
+    "build": "pnpm clean && pnpm build:types && pnpm build:node && pnpm build:client",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:node": "rollup -c rollup.config.node.ts",
+    "build:client": "rollup -c rollup.config.client.ts",
+    "clean": "rimraf dist",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint src --ext .ts,.vue",
+    "lint:fix": "eslint src --ext .ts,.vue --fix",
+    "typecheck": "vue-tsc --noEmit",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "release": "bumpp"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/server-renderer": "^3.5.17",
+    "chokidar": "^4.0.3",
+    "commander": "^12.0.0",
+    "debug": "^4.4.1",
+    "fast-glob": "^3.3.0",
+    "gray-matter": "^4.0.3",
+    "js-yaml": "^4.1.0",
+    "picocolors": "^1.1.1",
+    "vite": "^7.0.3",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@types/debug": "^4.1.12",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "bumpp": "^9.7.1",
+    "eslint": "^9.18.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.44.2",
+    "rollup-plugin-dts": "^6.1.1",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.0-beta.2",
+    "vue-tsc": "^3.0.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@10.12.4"
+}
