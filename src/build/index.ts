@@ -4,10 +4,13 @@ import type { PluginManager } from '../plugin'
 import { createVirtualModulePlugin } from '../virtual'
 import { build as viteBuild, mergeConfig } from 'vite'
 import { createRequire } from 'module'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
+import { fileURLToPath } from 'url'
 
 const require = createRequire(import.meta.url)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 /**
  * 构建选项
@@ -169,8 +172,8 @@ export class LyriBuilder {
   private getClientEntries() {
     const entries: Record<string, string> = {}
     
-    // 主入口
-    entries['main'] = resolve(__dirname, '../client/main.ts')
+    // 主入口 - 使用相对于项目根目录的路径
+    entries['main'] = resolve(process.cwd(), 'src/client/main.ts')
     
     // 页面入口
     this.lyrics.forEach(lyric => {
@@ -185,7 +188,8 @@ export class LyriBuilder {
    * 获取服务端入口
    */
   private getServerEntry() {
-    return resolve(__dirname, '../client/ssr.ts')
+    // 创建一个简单的 SSR 入口，如果不存在的话
+    return resolve(process.cwd(), 'src/client/main.ts') // 临时使用相同入口
   }
   
   /**
