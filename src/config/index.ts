@@ -34,7 +34,7 @@ export interface BuildConfig {
   /** 输出目录 */
   outDir: string
   /** 资源目录 */
-  assetsDir: string
+  assetsDir?: string
   /** 是否生成站点地图 */
   generateSitemap: boolean
   /** 基础路径 */
