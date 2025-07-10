@@ -97,7 +97,7 @@ export class VirtualModuleGenerator {
   /**
    * 生成站点数据模块
    */
-  private generateSiteDataModule(): VirtualModule {
+  generateSiteDataModule(): VirtualModule {
     return {
       id: '/@lyri/site-data',
       content: () => {
@@ -184,7 +184,7 @@ export { default as ToneMark } from '/src/theme/components/ToneMark.vue'
   /**
    * 生成路由模块
    */
-  private generateRoutesModule(): VirtualModule {
+  generateRoutesModule(): VirtualModule {
     return {
       id: '/@lyri/routes',
       content: () => {
@@ -372,19 +372,20 @@ export const themeConfig = ${JSON.stringify(this.config.theme.options, null, 2)}
    * 获取 slug
    */
   private getSlug(title: string): string {
+    // 直接使用标题作为slug，保留中文字符
+    // 只替换一些特殊字符，但保留中文
     return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\u4e00-\u9fa5]/g, '-')
+      .replace(/[/\\:*?"<>|]/g, '-') // 只替换文件系统不允许的字符
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '')
-      || 'untitled'
+      .trim()
   }
   
   /**
    * 获取路径
    */
   private getPath(title: string): string {
-    return `/${encodeURIComponent(this.getSlug(title))}`
+    return `/${this.getSlug(title)}`
   }
 }
 

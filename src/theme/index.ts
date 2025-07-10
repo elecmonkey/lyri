@@ -55,8 +55,6 @@ export class ThemeResolver {
   resolve(name: string): ThemeDefinition {
     if (name === 'default' || name === '@lyri/theme-default') {
       return defaultTheme
-    } else if (name === 'minimal' || name === '@lyri/theme-minimal') {
-      return minimalTheme
     } else if (name.startsWith('@lyri/theme-')) {
       // 内置主题
       return this.resolveBuiltinTheme(name)
@@ -76,8 +74,6 @@ export class ThemeResolver {
     switch (name) {
       case '@lyri/theme-default':
         return defaultTheme
-      case '@lyri/theme-minimal':
-        return minimalTheme
       default:
         throw new Error(`Unknown builtin theme: ${name}`)
     }
@@ -111,9 +107,7 @@ export const defaultTheme: ThemeDefinition = {
     LyricContent: () => import('./components/LyricContent.vue'),
     LyricLine: () => import('./components/LyricLine.vue'),
     LyricChar: () => import('./components/LyricChar.vue'),
-    ToneMark: () => import('./components/ToneMark.vue'),
-    Navigation: () => import('./components/Navigation.vue'),
-    Footer: () => import('./components/Footer.vue')
+    ToneMark: () => import('./components/ToneMark.vue')
   },
   styles: [
     './styles/base.css',
@@ -130,19 +124,6 @@ export const defaultTheme: ThemeDefinition = {
       version: '0.1.0'
     }
   }
-}
-
-/**
- * 极简主题
- */
-export const minimalTheme: ThemeDefinition = {
-  Layout: () => import('./components/MinimalLayout.vue'),
-  components: {
-    LyricContent: () => import('./components/MinimalLyricContent.vue')
-  },
-  styles: [
-    './styles/minimal.css'
-  ]
 }
 
 /**
