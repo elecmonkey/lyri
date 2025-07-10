@@ -6,6 +6,22 @@
 
 快速构建自己的私人歌词本。
 
+## 构建流
+
+```mermaid
+graph LR
+    A[Lyrics Files] --> B[Parser]
+    B --> C[Virtual Modules]
+    C --> D[Vite Build]
+    D --> E[Client Bundle]
+    D --> F[Server Bundle]
+    F --> G[SSR Static Render]
+    G --> H[Static HTML File]
+    E --> I[Client Hydration]
+    H --> I
+    I --> J[Full Web Application]
+```
+
 ## 快速开始
 
 ### 安装
@@ -27,6 +43,16 @@ pnpm build:node
 ```bash
 # 启动开发服务器
 node bin/lyri.js dev
+```
+
+### 构建
+
+```bash
+# 构建静态网站
+node bin/lyri.js build
+
+# 预览构建结果
+node bin/lyri.js preview
 ```
 
 ## 当前状态
