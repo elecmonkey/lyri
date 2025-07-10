@@ -181,14 +181,9 @@ export class LyriBuilder {
   private getClientEntries() {
     const entries: Record<string, string> = {}
     
-    // 主入口 - 使用相对于项目根目录的路径
+    // 只有主入口，不为每个歌曲创建单独入口
+    // 歌曲页面将通过路由懒加载
     entries['main'] = resolve(process.cwd(), 'src/client/main.ts')
-    
-    // 页面入口
-    this.lyrics.forEach(lyric => {
-      const slug = this.getSlug(lyric.meta.title)
-      entries[slug] = `/@lyri/pages/${slug}`
-    })
     
     return entries
   }

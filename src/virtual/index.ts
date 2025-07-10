@@ -190,24 +190,22 @@ export { default as Footer } from '/src/theme/components/Footer.vue'
     return {
       id: '/@lyri/routes',
       content: () => {
-        // 生成导入语句
-        const imports = [
-          `import IndexPage from '/@lyri/pages/index.js'`,
-          ...this.lyrics.map(lyric => 
-            `import ${this.getSlug(lyric.meta.title).replace(/[-]/g, '_')}Page from '/@lyri/pages/${this.getSlug(lyric.meta.title)}'`
-          )
-        ].join('\n')
+        // 首页使用直接导入（因为首页通常需要立即加载）
+        const imports = `import IndexPage from '/@lyri/pages/index.js'`
         
-        // 生成路由配置
+        // 生成路由配置，歌曲页面使用懒加载
         const routes = this.lyrics.map(lyric => ({
           path: this.getPath(lyric.meta.title),
-          component: `${this.getSlug(lyric.meta.title).replace(/[-]/g, '_')}Page`
+          slug: this.getSlug(lyric.meta.title)
         }))
         
         const routesCode = [
           `  { path: '/', component: IndexPage }`,
           ...routes.map(route => 
-            `  { path: '${route.path}', component: ${route.component} }`
+            `  { 
+    path: '${route.path}', 
+    component: () => import('/@lyri/pages/${route.slug}')
+  }`
           )
         ].join(',\n')
         
