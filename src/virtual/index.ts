@@ -175,8 +175,6 @@ export { default as LyricContent } from '/src/theme/components/LyricContent.vue'
 export { default as LyricLine } from '/src/theme/components/LyricLine.vue'
 export { default as LyricChar } from '/src/theme/components/LyricChar.vue'
 export { default as ToneMark } from '/src/theme/components/ToneMark.vue'
-export { default as Navigation } from '/src/theme/components/Navigation.vue'
-export { default as Footer } from '/src/theme/components/Footer.vue'
 ` : ''}
 `
       }
