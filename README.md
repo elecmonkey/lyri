@@ -10,16 +10,29 @@
 
 ```mermaid
 graph LR
-    A[Lyrics Files] --> B[Parser]
-    B --> C[Virtual Modules]
-    C --> D[Vite Build]
-    D --> E[Client Bundle]
-    D --> F[Server Bundle]
-    F --> G[SSR Static Render]
-    G --> H[Static HTML File]
-    E --> I[Client Hydration]
-    H --> I
-    I --> J[Full Web Application]
+    A[Lyrics] --> B[Parser]
+    B --> C[Data]
+    C --> D[Virtual Modules]
+    T[Theme System] --> D
+    T --> E[Vue Components]
+    D --> E
+    E --> F[Vite Build]
+    
+    style T fill:#e1f5fe
+    style E fill:#f3e5f5
+```
+
+```mermaid
+graph LR
+    F[Vite Build] --> G[Client Bundle]
+    F --> H[Server Bundle]
+    H --> I[SSR Static Render]
+    I --> J[Static HTML + CSS]
+    G --> K[Client Hydration]
+    J --> K
+    K --> L[Interactive Web App]
+    
+    style J fill:#e8f5e8
 ```
 
 ## 快速开始
