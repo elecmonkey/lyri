@@ -59,11 +59,7 @@ export interface LyriConfig {
   /** 主题配置 */
   theme: ThemeConfig
   
-  // === 语言配置 ===
-  /** 支持的语言 */
-  languages: Record<string, LanguageConfig>
-  /** 默认语言 */
-  defaultLanguage?: string
+
   
   // === 构建配置 ===
   /** 构建配置 */
@@ -91,9 +87,9 @@ export function defineConfig(config: LyriConfig): LyriConfig {
 export async function resolveConfig(
   root: string = process.cwd(),
   _command: 'dev' | 'build' = 'dev'
-): Promise<Required<LyriConfig>> {
+): Promise<LyriConfig & { title: string; theme: ThemeConfig; build: BuildConfig }> {
   // 默认配置
-  const defaultConfig: Required<LyriConfig> = {
+  const defaultConfig: LyriConfig & { title: string; theme: ThemeConfig; build: BuildConfig } = {
     title: 'Lyri Site',
     description: '',
     srcDir: root,
@@ -103,14 +99,6 @@ export async function resolveConfig(
       name: '@lyri/theme-default',
       options: {}
     },
-    
-    languages: {
-      'zh-jyut': {
-        name: '粵語',
-        toneSystem: 'jyutping'
-      }
-    },
-    defaultLanguage: 'zh-jyut',
     
     build: {
       outDir: `${root}/.lyri/dist`,

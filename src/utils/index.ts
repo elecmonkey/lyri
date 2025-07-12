@@ -1,4 +1,136 @@
 import fastGlob from 'fast-glob'
+import type { LyricData } from '../parser'
+
+/**
+ * 语言配置接口
+ */
+export interface DetectedLanguage {
+  code: string
+  name: string
+  toneSystem: 'pinyin' | 'jyutping' | 'none'
+  direction: 'ltr' | 'rtl'
+}
+
+/**
+ * 语言映射表
+ */
+const LANGUAGE_MAP: Record<string, DetectedLanguage> = {
+  'zh-CN': {
+    code: 'zh-CN',
+    name: '普通话',
+    toneSystem: 'pinyin',
+    direction: 'ltr'
+  },
+  'zh-TW': {
+    code: 'zh-TW', 
+    name: '繁體中文',
+    toneSystem: 'pinyin',
+    direction: 'ltr'
+  },
+  'zh-HK': {
+    code: 'zh-HK',
+    name: '粵語',
+    toneSystem: 'jyutping',
+    direction: 'ltr'
+  },
+  'zh-MO': {
+    code: 'zh-MO',
+    name: '粵語',
+    toneSystem: 'jyutping', 
+    direction: 'ltr'
+  },
+  'en': {
+    code: 'en',
+    name: 'English',
+    toneSystem: 'none',
+    direction: 'ltr'
+  },
+  'en-US': {
+    code: 'en-US',
+    name: 'English (US)',
+    toneSystem: 'none',
+    direction: 'ltr'
+  },
+  'en-GB': {
+    code: 'en-GB',
+    name: 'English (UK)',
+    toneSystem: 'none',
+    direction: 'ltr'
+  }
+}
+
+/**
+ * 从歌词数据中检测使用的语言
+ */
+export function detectLanguagesFromLyrics(lyrics: LyricData[]): Record<string, DetectedLanguage> {
+  const detectedLanguages: Record<string, DetectedLanguage> = {}
+  
+  for (const lyric of lyrics) {
+    const langCode = lyric.meta.language
+    
+    if (langCode && LANGUAGE_MAP[langCode]) {
+      detectedLanguages[langCode] = LANGUAGE_MAP[langCode]
+    } else if (langCode) {
+      // 如果是未知语言代码，尝试推断
+      const inferredLanguage = inferLanguageConfig(langCode)
+      detectedLanguages[langCode] = inferredLanguage
+    }
+  }
+  
+  return detectedLanguages
+}
+
+/**
+ * 推断语言配置
+ */
+function inferLanguageConfig(langCode: string): DetectedLanguage {
+  // 基于语言代码推断配置
+  if (langCode.startsWith('zh-')) {
+    // 中文变体
+    if (langCode.includes('HK') || langCode.includes('MO') || langCode.includes('yue')) {
+      return {
+        code: langCode,
+        name: '粵語',
+        toneSystem: 'jyutping',
+        direction: 'ltr'
+      }
+    } else {
+      return {
+        code: langCode,
+        name: '中文',
+        toneSystem: 'pinyin',
+        direction: 'ltr'
+      }
+    }
+  } else if (langCode.startsWith('en')) {
+    // 英文变体
+    return {
+      code: langCode,
+      name: 'English',
+      toneSystem: 'none',
+      direction: 'ltr'
+    }
+  } else {
+    // 其他语言，默认无声调
+    return {
+      code: langCode,
+      name: langCode.toUpperCase(),
+      toneSystem: 'none',
+      direction: 'ltr'
+    }
+  }
+}
+
+/**
+ * 根据语言代码获取声调系统
+ */
+export function getToneSystemForLanguage(langCode: string): 'pinyin' | 'jyutping' | 'none' {
+  if (LANGUAGE_MAP[langCode]) {
+    return LANGUAGE_MAP[langCode].toneSystem
+  }
+  
+  return inferLanguageConfig(langCode).toneSystem
+}
 
 /**
  * 收集歌词文件

@@ -27,6 +27,7 @@
 <script setup>
 import { computed } from 'vue'
 import LyricChar from './LyricChar.vue'
+import { getToneSystemForLanguage } from '../../utils'
 
 const props = defineProps({
   line: {
@@ -73,22 +74,25 @@ const processedChars = computed(() => {
     if (ruby[i]) {
       rubyText = ruby[i]
       
-      // 简单的声调检测（这里可以根据具体需求扩展）
-      if (props.language === 'zh-CN') {
+      // 根据语言代码自动检测声调系统
+      const toneSystem = getToneSystemForLanguage(props.language)
+      
+      if (toneSystem === 'pinyin') {
         // 普通话四声
         const toneMatch = rubyText.match(/([1-4])$/)
         if (toneMatch) {
           tone = parseInt(toneMatch[1])
           rubyText = rubyText.replace(/[1-4]$/, '')
         }
-      } else if (props.language === 'zh-HK') {
-        // 粤语六声（简化处理）
+      } else if (toneSystem === 'jyutping') {
+        // 粤语六声
         const toneMatch = rubyText.match(/([1-6])$/)
         if (toneMatch) {
           tone = parseInt(toneMatch[1])
           rubyText = rubyText.replace(/[1-6]$/, '')
         }
       }
+      // 对于 'none' 类型（如英语），不处理声调
     }
     
     chars.push({

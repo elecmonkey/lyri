@@ -6,6 +6,7 @@ import { build as viteBuild, mergeConfig } from 'vite'
 import { createRequire } from 'module'
 import { resolve } from 'path'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
+import { detectLanguagesFromLyrics } from '../utils'
 
 const require = createRequire(import.meta.url)
 
@@ -265,12 +266,14 @@ export class LyriBuilder {
    */
   private async prepareVirtualModuleContext() {
     // 直接准备SSR需要的数据，不依赖虚拟模块的复杂生成逻辑
+    // 自动检测语言
+    const detectedLanguages = detectLanguagesFromLyrics(this.lyrics)
+    
     const siteData = {
       title: this.config.title,
       description: this.config.description,
       base: this.config.build.base,
-      languages: this.config.languages,
-      defaultLanguage: this.config.defaultLanguage
+      languages: detectedLanguages
     }
     
     // 准备歌词数据，包含完整的歌词内容

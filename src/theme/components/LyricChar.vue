@@ -18,6 +18,7 @@
 <script setup>
 import { computed } from 'vue'
 import ToneMark from './ToneMark.vue'
+import { getToneSystemForLanguage } from '../../utils'
 
 const props = defineProps({
   char: {
@@ -52,17 +53,8 @@ const charClasses = computed(() => ({
 }))
 
 const toneSystem = computed(() => {
-  // 根据语言确定声调系统
-  switch (props.options.language) {
-    case 'zh-HK':
-    case 'zh-MO':
-      return 'jyutping'
-    case 'zh-CN':
-    case 'zh-TW':
-      return 'pinyin'
-    default:
-      return 'pinyin'
-  }
+  // 自动根据语言代码检测声调系统
+  return getToneSystemForLanguage(props.options.language || 'en')
 })
 </script>
 

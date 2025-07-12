@@ -14,21 +14,6 @@ export default {
     }
   },
   
-  languages: {
-    'zh-CN': {
-      name: '普通话',
-      toneSystem: 'pinyin',
-      direction: 'ltr'
-    },
-    'zh-HK': {
-      name: '粵語',
-      toneSystem: 'jyutping',
-      direction: 'ltr'
-    }
-  },
-  
-  defaultLanguage: 'zh-CN',
-  
   build: {
     outDir: '.lyri/dist',
     base: '/',

@@ -1,5 +1,6 @@
 import type { LyriConfig } from '../config'
 import type { LyricData } from '../parser'
+import { detectLanguagesFromLyrics } from '../utils'
 
 /**
  * 虚拟模块接口
@@ -101,12 +102,14 @@ export class VirtualModuleGenerator {
     return {
       id: '/@lyri/site-data',
       content: () => {
+        // 自动检测语言
+        const detectedLanguages = detectLanguagesFromLyrics(this.lyrics)
+        
         const siteData = {
           title: this.config.title,
           description: this.config.description,
           base: this.config.build.base,
-          languages: this.config.languages,
-          defaultLanguage: this.config.defaultLanguage
+          languages: detectedLanguages
         }
         
         return `export default ${JSON.stringify(siteData, null, 2)}`
@@ -219,7 +222,9 @@ export { default as ToneMark } from '/src/theme/components/ToneMark.vue'
     return {
       id: '/@lyri/languages',
       content: () => {
-        return `export default ${JSON.stringify(this.config.languages, null, 2)}`
+        // 自动检测语言
+        const detectedLanguages = detectLanguagesFromLyrics(this.lyrics)
+        return `export default ${JSON.stringify(detectedLanguages, null, 2)}`
       }
     }
   }

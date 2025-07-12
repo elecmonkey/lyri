@@ -7,13 +7,6 @@
         </div>
         <div class="nav-menu">
           <a href="/" class="nav-link">首页</a>
-          <div class="nav-language">
-            <select v-model="currentLanguage" @change="onLanguageChange">
-              <option v-for="(lang, key) in siteData.languages" :key="key" :value="key">
-                {{ lang.name }}
-              </option>
-            </select>
-          </div>
         </div>
       </nav>
     </header>
@@ -55,12 +48,7 @@ const props = defineProps({
   }
 })
 
-const currentLanguage = ref(siteData.defaultLanguage || 'zh-CN')
-
-const onLanguageChange = (event) => {
-  currentLanguage.value = event.target.value
-  // 这里可以添加语言切换逻辑
-}
+// 语言检测已移至自动化处理，无需手动选择
 </script>
 
 <style scoped>
@@ -116,12 +104,7 @@ const onLanguageChange = (event) => {
   background-color: #f5f5f5;
 }
 
-.nav-language select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-}
+
 
 .lyric-main {
   flex: 1;
