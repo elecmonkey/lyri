@@ -2,6 +2,8 @@
 
 > A Static Site Generator.
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/elecmonkey/lyri)
+
 ## 愿景
 
 快速构建自己的私人歌词本。
